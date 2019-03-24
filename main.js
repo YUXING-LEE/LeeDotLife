@@ -4,6 +4,7 @@ const locationList = require('./const/location');
 const Iuser = require('./Model/user');
 const user_function = require('./Controller/user');
 const weather_function = require('./Controller/weather');
+const stock_function = require('./Controller/stock');
 
 const bot = linebot({
     channelId: process.env.ChannelId,
@@ -17,7 +18,8 @@ const bot = linebot({
 bot.on('message', function (event) {
     user_function.accountCheck(event.source.userId, function(accountCheck) {
         if (accountCheck && event.message.type == "text") {
-            switch (event.message.text.trim().toLowerCase()) {
+            let message = event.message.text.trim().toLowerCase().split(/\s+/);
+            switch (message[0].trim().toLowerCase()) {
                 case "weather":
                     user_function.getLocation(event.source.userId, function(location){
                         weather_function.now(locationList[location], function(weather) {
@@ -31,6 +33,14 @@ bot.on('message', function (event) {
                             console.log(air);
                             event.reply("OK");
                         });
+                    });
+                    break;
+                case "getStock":
+                    stock_function.checkDate(message[1], function (check) {
+                        if(check)
+                            event.reply("Already Save");
+                        else
+                            event.reply("NOOO!!!");
                     });
                     break;
                 case "delete account":
