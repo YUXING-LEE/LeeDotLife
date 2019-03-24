@@ -38,7 +38,7 @@ bot.on('message', function (event) {
                         });
                     });
                     break;
-                case "getStock":
+                case "getstock":
                     stock_function.checkDate(message[1], function (check) {
                         if(check)
                             event.reply("Already Save");
