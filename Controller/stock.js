@@ -12,8 +12,10 @@ let arr = [];
 let stockList = [[], []];
 let stockListLen = 0;
 let result = false;
+let date = "";
 
-module.exports.climbStock = function (date, callback) {
+module.exports.climbStock = function (searchDate, callback) {
+    date = searchDate;
     stocksDoc.useServiceAccountAuth(creds, function (err) {
         stockListDoc.useServiceAccountAuth(creds, function (err) {
             getStockList(function (err) {
