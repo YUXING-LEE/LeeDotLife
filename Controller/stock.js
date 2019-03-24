@@ -3,26 +3,22 @@ let cheerio = require("cheerio");
 let GoogleSpreadsheet = require('google-spreadsheet');
 let creds = JSON.parse(process.env.googleCreds)
 
-let stocksDoc = new GoogleSpreadsheet('1E7c50RxJwWcEEd3_MJvIO2Ofi0MdHTDUKPZ0ctxL_bo');
-let stockListDate = new GoogleSpreadsheet('1ACLlRrxn5E1HEFc76tmwBpvfdkZ6GSsU9b2opnaFCmc');
-let stockListDoc = new GoogleSpreadsheet('19CuAslRE8J6tBkfj3VpCSp6OxMWeNi8z4O8nOdORLb0');
+let stocksDoc = new GoogleSpreadsheet(process.env.stocksDoc);
+let stockListDate = new GoogleSpreadsheet(process.env.stockListDate);
+let stockListDoc = new GoogleSpreadsheet(process.env.stockListDoc);
 
 let header = ["證券代號", "證券名稱", "成交股數", "成交筆數", "成交金額", "開盤價", "最高價", "最低價", "收盤價", "漲跌", "漲跌價差", "最後揭示買價", "最後揭示買量", "最後揭示賣價", "最後揭示賣量", "本益比", "日期"];
 let arr = [];
 let stockList = [[], []];
 let stockListLen = 0;
-let date = "";  
 
 module.exports.climbStock = function (date, callback) {
-    auth();
 
-    function auth() {
-        stocksDoc.useServiceAccountAuth(creds, function (err) {
-            stockListDoc.useServiceAccountAuth(creds, function (err) {
-                getStockList();
-            });
+    stocksDoc.useServiceAccountAuth(creds, function (err) {
+        stockListDoc.useServiceAccountAuth(creds, function (err) {
+            getStockList();
         });
-    }
+    });
 
     function getStockList() {
         stockListDoc.getRows(1, function (err, rows) {
@@ -34,13 +30,13 @@ module.exports.climbStock = function (date, callback) {
             getStock();
         });
     }
-    
+
     function getStock() {
         // let today = new Date();
         // date = today.getFullYear() + "" + ((today.getMonth() + 1) < 10 ? "0" + (today.getMonth() + 1) : (today.getMonth() + 1)) + "" + (today.getDate() < 10 ? "0" + today.getDate() : today.getDate());
-    
+
         // date = "20190308";
-    
+
         request({
             url: "http://www.twse.com.tw/exchangeReport/MI_INDEX?date=" + date + "&type=ALL",
             method: "POST"
@@ -59,9 +55,11 @@ module.exports.climbStock = function (date, callback) {
                     }
                     createSheet(0, arr[0]);
                 }
+                else
+                    callback(false);
             });
     }
-    
+
     function createSheet(i, objData) {
         let sheetIndex = stockList[0].findIndex(name => name == objData[0]);
         if (sheetIndex == -1) {
@@ -101,6 +99,15 @@ module.exports.climbStock = function (date, callback) {
                         if (i < arr.length) {
                             createSheet(i, arr[i])
                         }
+                        else{
+                            stockListDate.useServiceAccountAuth(creds, function (err) {
+                                stockListDate.addRow(1, {
+                                    "date": date
+                                }, function (err) {
+                                    callback(true);
+                                });
+                            });
+                        }
                         if (err) {
                             console.log(err);
                         }
@@ -111,7 +118,7 @@ module.exports.climbStock = function (date, callback) {
         else
             add(i, objData);
     }
-    
+
     function add(i, objData) {
         if (objData) {
             let sheetIndex = stockList[0].findIndex(name => name == objData[0]);
@@ -139,8 +146,15 @@ module.exports.climbStock = function (date, callback) {
                 if (i < arr.length) {
                     createSheet(i, arr[i])
                 }
-                else
-                    callback();
+                else{
+                    stockListDate.useServiceAccountAuth(creds, function (err) {
+                        stockListDate.addRow(1, {
+                            "date": date
+                        }, function (err) {
+                            callback(true);
+                        });
+                    });
+                }
                 if (err) {
                     console.log(err);
                 }
@@ -153,7 +167,7 @@ module.exports.checkDate = function (date, callback) {
     stockListDate.useServiceAccountAuth(creds, function (err) {
         stockListDate.getRows(1, function (err, rows) {
             for (let i = 0; i < rows.length; i++) {
-                if(rows[i]["date"] == date)
+                if (rows[i]["date"] == date)
                     callback(true);
             }
             callback(false);

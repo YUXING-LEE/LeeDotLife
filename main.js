@@ -43,8 +43,10 @@ bot.on('message', function (event) {
                         if(check)
                             event.reply("Already Save");
                         else {
-                            stock_function.climbStock(message[1], function () {
-                                event.reply("Climb " + message[1] + " Done !!!");
+                            stock_function.climbStock(message[1], function (flag) {
+                                if(flag)
+                                    event.reply("Climb " + message[1] + " Done!!!");
+                                event.reply("No DATA!!!");
                             });
                         }
                     });
