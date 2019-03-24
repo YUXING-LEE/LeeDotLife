@@ -1,7 +1,7 @@
 let request = require("request");
 let cheerio = require("cheerio");
-let creds = require('../const/lee-project-f30a03754bf5.json');
 let GoogleSpreadsheet = require('google-spreadsheet');
+let creds = process.env.googleCreds
 
 let stocksDoc = new GoogleSpreadsheet('1E7c50RxJwWcEEd3_MJvIO2Ofi0MdHTDUKPZ0ctxL_bo');
 let stockListDoc = new GoogleSpreadsheet('19CuAslRE8J6tBkfj3VpCSp6OxMWeNi8z4O8nOdORLb0');
