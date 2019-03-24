@@ -4,6 +4,7 @@ let GoogleSpreadsheet = require('google-spreadsheet');
 let creds = JSON.parse(process.env.googleCreds)
 
 let stocksDoc = new GoogleSpreadsheet('1E7c50RxJwWcEEd3_MJvIO2Ofi0MdHTDUKPZ0ctxL_bo');
+let stockListDate = new GoogleSpreadsheet('1ACLlRrxn5E1HEFc76tmwBpvfdkZ6GSsU9b2opnaFCmc');
 let stockListDoc = new GoogleSpreadsheet('19CuAslRE8J6tBkfj3VpCSp6OxMWeNi8z4O8nOdORLb0');
 
 let header = ["證券代號", "證券名稱", "成交股數", "成交筆數", "成交金額", "開盤價", "最高價", "最低價", "收盤價", "漲跌", "漲跌價差", "最後揭示買價", "最後揭示買量", "最後揭示賣價", "最後揭示賣量", "本益比", "日期"];
