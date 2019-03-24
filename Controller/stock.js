@@ -32,11 +32,6 @@ module.exports.climbStock = function (date, callback) {
     }
 
     function getStock() {
-        // let today = new Date();
-        // date = today.getFullYear() + "" + ((today.getMonth() + 1) < 10 ? "0" + (today.getMonth() + 1) : (today.getMonth() + 1)) + "" + (today.getDate() < 10 ? "0" + today.getDate() : today.getDate());
-
-        // date = "20190308";
-
         request({
             url: "http://www.twse.com.tw/exchangeReport/MI_INDEX?date=" + date + "&type=ALL",
             method: "POST"
@@ -164,13 +159,15 @@ module.exports.climbStock = function (date, callback) {
 }
 
 module.exports.checkDate = function (date, callback) {
+    let flag = false;
     stockListDate.useServiceAccountAuth(creds, function (err) {
         stockListDate.getRows(1, function (err, rows) {
             for (let i = 0; i < rows.length; i++) {
-                if (rows[i]["date"] == date)
-                    callback(true);
+                if (rows[i]["date"] == date){
+                    flag = true;
+                }
             }
-            callback(false);
+            callback(flag);
         });
     });
 }
