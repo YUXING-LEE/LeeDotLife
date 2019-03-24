@@ -1,7 +1,7 @@
 let request = require("request");
 let cheerio = require("cheerio");
 let GoogleSpreadsheet = require('google-spreadsheet');
-let creds = process.env.googleCreds
+let creds = JSON.parse(process.env.googleCreds)
 
 let stocksDoc = new GoogleSpreadsheet('1E7c50RxJwWcEEd3_MJvIO2Ofi0MdHTDUKPZ0ctxL_bo');
 let stockListDoc = new GoogleSpreadsheet('19CuAslRE8J6tBkfj3VpCSp6OxMWeNi8z4O8nOdORLb0');
@@ -10,7 +10,7 @@ let header = ["證券代號", "證券名稱", "成交股數", "成交筆數", "�
 let arr = [];
 let stockList = [[], []];
 let stockListLen = 0;
-let date = "";
+let date = "";  
 
 module.exports.saveToday = function (userLocation, callback) {
     auth();
