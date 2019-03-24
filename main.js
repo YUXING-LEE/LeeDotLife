@@ -42,8 +42,11 @@ bot.on('message', function (event) {
                     stock_function.checkDate(message[1], function (check) {
                         if(check)
                             event.reply("Already Save");
-                        else
-                            event.reply("NOOO!!!");
+                        else {
+                            stock_function.climbStock(message[1], function () {
+                                event.reply("Climb " + message[1] + " Done !!!");
+                            });
+                        }
                     });
                     break;
                 case "delete account":
