@@ -20,6 +20,10 @@ module.exports.climbStock = function (date, callback) {
         });
     });
 
+    function returnResult(res) {
+        callback(res);
+    }
+
     function getStockList() {
         stockListDoc.getRows(1, function (err, rows) {
             for (let i = 0; i < rows.length; i++) {
@@ -51,7 +55,7 @@ module.exports.climbStock = function (date, callback) {
                     createSheet(0, arr[0]);
                 }
                 else
-                    callback(false);
+                    returnResult(false);
             });
     }
 
@@ -63,7 +67,7 @@ module.exports.climbStock = function (date, callback) {
                 "證券名稱": objData[1],
                 "index": stockListLen
             }, function () {
-                console.log(stockListLen)
+                console.log(stockListLen);
                 stockListLen += 1;
                 stocksDoc.addWorksheet({
                     title: objData[0] + " " + objData[1],
@@ -92,14 +96,14 @@ module.exports.climbStock = function (date, callback) {
                     }, function (err) {
                         i++;
                         if (i < arr.length) {
-                            createSheet(i, arr[i])
+                            createSheet(i, arr[i]);
                         }
                         else{
                             stockListDate.useServiceAccountAuth(creds, function (err) {
                                 stockListDate.addRow(1, {
                                     "date": date
                                 }, function (err) {
-                                    callback(true);
+                                    returnResult(true);
                                 });
                             });
                         }
@@ -139,14 +143,14 @@ module.exports.climbStock = function (date, callback) {
             }, function (err) {
                 i++;
                 if (i < arr.length) {
-                    createSheet(i, arr[i])
+                    createSheet(i, arr[i]);
                 }
                 else{
                     stockListDate.useServiceAccountAuth(creds, function (err) {
                         stockListDate.addRow(1, {
                             "date": date
                         }, function (err) {
-                            callback(true);
+                            returnResult(true);
                         });
                     });
                 }
