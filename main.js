@@ -19,9 +19,9 @@ bot.on('message', function (event) {
     user_function.accountCheck(event.source.userId, function(accountCheck) {
         if (accountCheck && event.message.type == "text") {
             let message = event.message.text.trim().toLowerCase().split(/\s+/);
-            console.log("message: ", message)
-            console.log("message[0].trim().toLowerCase(): ", message[0].trim().toLowerCase())
-            console.log("message[1]: ", message[1])
+            console.log("message: ", message);
+            console.log("message[0].trim().toLowerCase(): ", message[0].trim().toLowerCase());
+            console.log("message[1]: ", message[1]);
             switch (message[0].trim().toLowerCase()) {
                 case "weather":
                     user_function.getLocation(event.source.userId, function(location){
@@ -78,7 +78,7 @@ bot.on('message', function (event) {
                     break;
                 default: event.reply("尚未註冊\n透過create name location建立\nEX:create 王大明 台北");
             }
-        };
+        }
     });
 });
 
