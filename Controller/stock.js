@@ -36,7 +36,7 @@ module.exports.climbStock = function (date, callback) {
     function getStock() {
         request({
             url: "http://www.twse.com.tw/exchangeReport/MI_INDEX?date=" + date + "&type=ALL",
-            method: "POST"
+            method: "GET"
         },
             function (err, res, body) {
                 if (err || !body) { return; }
@@ -44,12 +44,13 @@ module.exports.climbStock = function (date, callback) {
                 let obj = JSON.parse(data.text());
                 let flag = false;
                 arr = [];
-                if (obj["data5"]) {
-                    for (let i = 0; i < obj["data5"].length; i++) {
-                        if (obj["data5"][i][0] == "1102")
+                if (obj["data9"]) {
+                    let data9 = obj["data9"]
+                    for (let i = 0; i < data9.length; i++) {
+                        if (data9[i][0] == "1102")
                             flag = true;
                         if (flag)
-                            arr.push(obj["data5"][i]);
+                            arr.push(data9[i]);
                     }
                     createSheet(0, arr[0]);
                 }
